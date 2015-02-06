@@ -68,6 +68,7 @@ server:
     install: '1'
     packages:
         - git
+        - libpq-dev
         - vim
 users_groups:
     install: '1'
