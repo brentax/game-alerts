@@ -20,6 +20,10 @@ require 'rails_helper'
 
 RSpec.describe GamesController, type: :controller do
 
+  let!(:game) {
+    create(:game)
+  }
+
   # This should return the minimal set of attributes required to create a valid
   # Game. As you add validations to Game, be sure to
   # adjust the attributes here as well.
@@ -38,7 +42,6 @@ RSpec.describe GamesController, type: :controller do
 
   describe "GET #index" do
     it "assigns all games as @games" do
-      game = Game.create! valid_attributes
       get :index, {}, valid_session
       expect(assigns(:games)).to eq([game])
     end
@@ -46,23 +49,7 @@ RSpec.describe GamesController, type: :controller do
 
   describe "GET #show" do
     it "assigns the requested game as @game" do
-      game = Game.create! valid_attributes
       get :show, {:id => game.to_param}, valid_session
-      expect(assigns(:game)).to eq(game)
-    end
-  end
-
-  describe "GET #new" do
-    it "assigns a new game as @game" do
-      get :new, {}, valid_session
-      expect(assigns(:game)).to be_a_new(Game)
-    end
-  end
-
-  describe "GET #edit" do
-    it "assigns the requested game as @game" do
-      game = Game.create! valid_attributes
-      get :edit, {:id => game.to_param}, valid_session
       expect(assigns(:game)).to eq(game)
     end
   end
@@ -81,9 +68,9 @@ RSpec.describe GamesController, type: :controller do
         expect(assigns(:game)).to be_persisted
       end
 
-      it "redirects to the created game" do
+      it "returns with status Created" do
         post :create, {:game => valid_attributes}, valid_session
-        expect(response).to redirect_to(Game.last)
+        expect(response).to have_http_status(201)
       end
     end
 
@@ -93,9 +80,9 @@ RSpec.describe GamesController, type: :controller do
         expect(assigns(:game)).to be_a_new(Game)
       end
 
-      it "re-renders the 'new' template" do
+      it "returns with status Unprocessable Entity" do
         post :create, {:game => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
+        expect(response).to have_http_status(422)
       end
     end
   end
@@ -103,56 +90,49 @@ RSpec.describe GamesController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        { name: "New Name" }
       }
 
       it "updates the requested game" do
-        game = Game.create! valid_attributes
         put :update, {:id => game.to_param, :game => new_attributes}, valid_session
         game.reload
-        skip("Add assertions for updated state")
+        expect(assigns(:game).name).to eq("New Name")
       end
 
       it "assigns the requested game as @game" do
-        game = Game.create! valid_attributes
         put :update, {:id => game.to_param, :game => valid_attributes}, valid_session
         expect(assigns(:game)).to eq(game)
       end
 
-      it "redirects to the game" do
-        game = Game.create! valid_attributes
+      it "returns with status No Content" do
         put :update, {:id => game.to_param, :game => valid_attributes}, valid_session
-        expect(response).to redirect_to(game)
+        expect(response).to have_http_status(204)
       end
     end
 
     context "with invalid params" do
       it "assigns the game as @game" do
-        game = Game.create! valid_attributes
         put :update, {:id => game.to_param, :game => invalid_attributes}, valid_session
         expect(assigns(:game)).to eq(game)
       end
 
-      it "re-renders the 'edit' template" do
-        game = Game.create! valid_attributes
+      it "returns with status Unprocessable Entity" do
         put :update, {:id => game.to_param, :game => invalid_attributes}, valid_session
-        expect(response).to render_template("edit")
+        expect(response).to have_http_status(422)
       end
     end
   end
 
   describe "DELETE #destroy" do
     it "destroys the requested game" do
-      game = Game.create! valid_attributes
       expect {
         delete :destroy, {:id => game.to_param}, valid_session
       }.to change(Game, :count).by(-1)
     end
 
-    it "redirects to the games list" do
-      game = Game.create! valid_attributes
+    it "returns with status No Content" do
       delete :destroy, {:id => game.to_param}, valid_session
-      expect(response).to redirect_to(games_url)
+      expect(response).to have_http_status(204)
     end
   end
 
