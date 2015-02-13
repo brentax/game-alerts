@@ -18,7 +18,7 @@ require 'rails_helper'
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
 
-RSpec.describe GamesController, type: :controller do
+RSpec.describe Api::V1::GamesController, type: :controller do
 
   let!(:game) {
     create(:game)
