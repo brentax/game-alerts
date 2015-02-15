@@ -1,34 +1,26 @@
 require "rails_helper"
 
-RSpec.describe SubscriptionsController, type: :routing do
+RSpec.describe Api::V1::SubscriptionsController, type: :routing do
   describe "routing" do
 
     it "routes to #index" do
-      expect(:get => "/subscriptions").to route_to("subscriptions#index")
-    end
-
-    it "routes to #new" do
-      expect(:get => "/subscriptions/new").to route_to("subscriptions#new")
+      expect(:get => "/api/v1/subscriptions").to route_to(:controller => "api/v1/subscriptions", :action => "index", :format => "json")
     end
 
     it "routes to #show" do
-      expect(:get => "/subscriptions/1").to route_to("subscriptions#show", :id => "1")
-    end
-
-    it "routes to #edit" do
-      expect(:get => "/subscriptions/1/edit").to route_to("subscriptions#edit", :id => "1")
+      expect(:get => "/api/v1/subscriptions/1").to route_to(:controller => "api/v1/subscriptions", :action => "show", :id => "1", :format => "json")
     end
 
     it "routes to #create" do
-      expect(:post => "/subscriptions").to route_to("subscriptions#create")
+      expect(:post => "/api/v1/subscriptions").to route_to(:controller => "api/v1/subscriptions", :action => "create", :format => "json")
     end
 
     it "routes to #update" do
-      expect(:put => "/subscriptions/1").to route_to("subscriptions#update", :id => "1")
+      expect(:put => "/api/v1/subscriptions/1").to route_to(:controller => "api/v1/subscriptions", :action => "update", :id => "1", :format => "json")
     end
 
     it "routes to #destroy" do
-      expect(:delete => "/subscriptions/1").to route_to("subscriptions#destroy", :id => "1")
+      expect(:delete => "/api/v1/subscriptions/1").to route_to(:controller => "api/v1/subscriptions", :action => "destroy", :id => "1", :format => "json")
     end
 
   end

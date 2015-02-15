@@ -18,17 +18,21 @@ require 'rails_helper'
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
 
-RSpec.describe SubscriptionsController, type: :controller do
+RSpec.describe Api::V1::SubscriptionsController, type: :controller do
+
+  let!(:subscription) {
+    create(:subscription)
+  }
 
   # This should return the minimal set of attributes required to create a valid
   # Subscription. As you add validations to Subscription, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    attributes_for :subscription
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    attributes_for :subscription, threshold_price: -1
   }
 
   # This should return the minimal set of values that should be in the session
@@ -38,7 +42,6 @@ RSpec.describe SubscriptionsController, type: :controller do
 
   describe "GET #index" do
     it "assigns all subscriptions as @subscriptions" do
-      subscription = Subscription.create! valid_attributes
       get :index, {}, valid_session
       expect(assigns(:subscriptions)).to eq([subscription])
     end
@@ -46,23 +49,7 @@ RSpec.describe SubscriptionsController, type: :controller do
 
   describe "GET #show" do
     it "assigns the requested subscription as @subscription" do
-      subscription = Subscription.create! valid_attributes
       get :show, {:id => subscription.to_param}, valid_session
-      expect(assigns(:subscription)).to eq(subscription)
-    end
-  end
-
-  describe "GET #new" do
-    it "assigns a new subscription as @subscription" do
-      get :new, {}, valid_session
-      expect(assigns(:subscription)).to be_a_new(Subscription)
-    end
-  end
-
-  describe "GET #edit" do
-    it "assigns the requested subscription as @subscription" do
-      subscription = Subscription.create! valid_attributes
-      get :edit, {:id => subscription.to_param}, valid_session
       expect(assigns(:subscription)).to eq(subscription)
     end
   end
@@ -81,9 +68,9 @@ RSpec.describe SubscriptionsController, type: :controller do
         expect(assigns(:subscription)).to be_persisted
       end
 
-      it "redirects to the created subscription" do
+      it "returns with status Created" do
         post :create, {:subscription => valid_attributes}, valid_session
-        expect(response).to redirect_to(Subscription.last)
+        expect(response).to have_http_status(201)
       end
     end
 
@@ -93,9 +80,9 @@ RSpec.describe SubscriptionsController, type: :controller do
         expect(assigns(:subscription)).to be_a_new(Subscription)
       end
 
-      it "re-renders the 'new' template" do
+      it "returns with status Unprocessable Entity" do
         post :create, {:subscription => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
+        expect(response).to have_http_status(422)
       end
     end
   end
@@ -103,56 +90,49 @@ RSpec.describe SubscriptionsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        { threshold_price: 16.50 }
       }
 
       it "updates the requested subscription" do
-        subscription = Subscription.create! valid_attributes
         put :update, {:id => subscription.to_param, :subscription => new_attributes}, valid_session
         subscription.reload
-        skip("Add assertions for updated state")
+        expect(assigns(:subscription).threshold_price).to eq(16.5)
       end
 
       it "assigns the requested subscription as @subscription" do
-        subscription = Subscription.create! valid_attributes
         put :update, {:id => subscription.to_param, :subscription => valid_attributes}, valid_session
         expect(assigns(:subscription)).to eq(subscription)
       end
 
-      it "redirects to the subscription" do
-        subscription = Subscription.create! valid_attributes
+      it "returns with status No Content" do
         put :update, {:id => subscription.to_param, :subscription => valid_attributes}, valid_session
-        expect(response).to redirect_to(subscription)
+        expect(response).to have_http_status(204)
       end
     end
 
     context "with invalid params" do
       it "assigns the subscription as @subscription" do
-        subscription = Subscription.create! valid_attributes
         put :update, {:id => subscription.to_param, :subscription => invalid_attributes}, valid_session
         expect(assigns(:subscription)).to eq(subscription)
       end
 
-      it "re-renders the 'edit' template" do
-        subscription = Subscription.create! valid_attributes
+      it "returns with status Unprocessable Entity" do
         put :update, {:id => subscription.to_param, :subscription => invalid_attributes}, valid_session
-        expect(response).to render_template("edit")
+        expect(response).to have_http_status(422)
       end
     end
   end
 
   describe "DELETE #destroy" do
     it "destroys the requested subscription" do
-      subscription = Subscription.create! valid_attributes
       expect {
         delete :destroy, {:id => subscription.to_param}, valid_session
       }.to change(Subscription, :count).by(-1)
     end
 
-    it "redirects to the subscriptions list" do
-      subscription = Subscription.create! valid_attributes
+    it "returns with status No Content" do
       delete :destroy, {:id => subscription.to_param}, valid_session
-      expect(response).to redirect_to(subscriptions_url)
+      expect(response).to have_http_status(204)
     end
   end
 

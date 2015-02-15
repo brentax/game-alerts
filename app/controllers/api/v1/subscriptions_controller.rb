@@ -1,3 +1,6 @@
+module Api
+module V1
+
 class SubscriptionsController < ApplicationController
   before_action :set_subscription, only: [:show, :update, :destroy]
 
@@ -21,7 +24,7 @@ class SubscriptionsController < ApplicationController
     @subscription = Subscription.new(subscription_params)
 
     if @subscription.save
-      render json: @subscription, status: :created, location: @subscription
+      render json: @subscription, status: :created, location: api_v1_subscription_url(@subscription)
     else
       render json: @subscription.errors, status: :unprocessable_entity
     end
@@ -56,4 +59,7 @@ class SubscriptionsController < ApplicationController
     def subscription_params
       params.require(:subscription).permit(:user, :game, :threshold_price)
     end
+end
+
+end
 end
