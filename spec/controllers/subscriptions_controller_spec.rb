@@ -68,6 +68,10 @@ RSpec.describe Api::V1::SubscriptionsController, type: :controller do
         expect(assigns(:subscription)).to be_persisted
       end
 
+      it "sends a confirmation email" do
+        expect { post :create, {:subscription => valid_attributes}, valid_session }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      end
+
       it "returns with status Created" do
         post :create, {:subscription => valid_attributes}, valid_session
         expect(response).to have_http_status(201)

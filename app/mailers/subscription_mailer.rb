@@ -5,7 +5,7 @@ class SubscriptionMailer < ApplicationMailer
   #
   #   en.subscriptions.confirmation.subject
   #
-  def confirmation
+  def confirmation(subscription)
     @greeting = "Hi"
 
     mail to: "to@example.org"

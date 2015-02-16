@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe SubscriptionMailer, type: :mailer do
   describe "confirmation" do
-    let(:mail) { SubscriptionMailer.confirmation }
+    let(:mail) { SubscriptionMailer.confirmation(create(:subscription)) }
 
     it "renders the headers" do
       expect(mail.subject).to eq("Confirmation")

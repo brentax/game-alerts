@@ -24,6 +24,7 @@ class SubscriptionsController < ApplicationController
     @subscription = Subscription.new(subscription_params)
 
     if @subscription.save
+      SubscriptionMailer.confirmation(@subscription).deliver_later
       render json: @subscription, status: :created, location: api_v1_subscription_url(@subscription)
     else
       render json: @subscription.errors, status: :unprocessable_entity
