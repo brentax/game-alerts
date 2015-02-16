@@ -14,8 +14,11 @@ vagrantfile-local:
                     host: '9189'
                     guest: '22'
                 VZGPvHpLhGi5:
-                    host: '8080'
-                    guest: '80'
+                    host: '3000'
+                    guest: '3000'
+                LAKJNnawenLK:
+                    host: '1080'
+                    guest: '1080'
         post_up_message: ''
         provider:
             virtualbox:
